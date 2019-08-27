@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd" id="WebApp_ID" version="4.0">
+  <display-name>JSPProj</display-name>
+  <!-- 서블릿 등록 -->
+  <servlet>
+  	<servlet-name>ServletHello</servlet-name>
+  	<servlet-class>controller.HelloServlet</servlet-class>
+  </servlet>
+  <!--요청 URL매핑 -->
+  <servlet-mapping>
+  	<servlet-name>ServletHello</servlet-name>
+  	<url-pattern>/HelloServlet.do</url-pattern>
+  </servlet-mapping>
+  
+  <!-- 서블릿 등록 -->
+  <servlet>
+  	<servlet-name>Calculator</servlet-name>
+  	<servlet-class>controller.CalculatorServlet</servlet-class>
+  	
+  </servlet>
+  <!--요청 URL매핑 -->
+  <servlet-mapping>
+  	<servlet-name>Calculator</servlet-name>
+  	<url-pattern>/Calculate.kosmo</url-pattern>
+  </servlet-mapping>
+  
+  <!-- 서블릿 등록 -->
+  <servlet>
+  	<servlet-name>ContentType</servlet-name>
+  	<servlet-class>controller.ContentTypeController</servlet-class>
+  </servlet>
+   <!--요청 URL매핑 -->
+   <servlet-mapping>
+   	<servlet-name>ContentType</servlet-name>
+   	<url-pattern>/Anidir/SomeDir/SetContentType.kosmo</url-pattern>
+   </servlet-mapping>
+   <!-- 컨텍스트 초기화 파라미터 등록 -->
+   <context-param>
+   	<param-name>ORACLE_URL</param-name>
+   	<param-value>jdbc:oracle:thin:@localhost:1521:orcl</param-value>
+   </context-param>
+   <context-param>
+   	<param-name>ORACLE_DRIVER</param-name>
+   	<param-value>oracle.jdbc.OracleDriver</param-value>
+   </context-param>
+   
+    <context-param>
+   	<param-name>JNDI_ROOT</param-name>
+   	<param-value>java:comp/env</param-value>
+   </context-param>
+   
+   <!-- 페이징 관련 컨텍스트 초기화 파라미터 -->
+   <context-param>
+   	<param-name>PAGE_SIZE</param-name>
+   	<param-value>2</param-value>
+   </context-param>
+   <context-param>
+   	<param-name>BLOCK_PAGE</param-name>
+   	<param-value>3</param-value>
+   </context-param>
+   
+   
+  <!-- 
+   		해당 JSP페이지에서만 사용가능한 서블릿 초기화 파라미터 등록
+       (효용도 떨어짐)
+   -->
+   <servlet>
+   	<servlet-name>APPLICATION_JSP</servlet-name>
+   	<jsp-file>/InnerObject03/Application.jsp</jsp-file>
+   	<init-param>
+   		<param-name>SERVLET_INIT</param-name>
+   		<param-value>서블릿 초기화 파라미터입니다</param-value>
+   	</init-param>
+   </servlet>
+   <servlet-mapping>
+   	<servlet-name>APPLICATION_JSP</servlet-name>
+   	<url-pattern>/InnerObject03/Application.jsp</url-pattern>
+   </servlet-mapping>
+   <!-- 세션의 유효시간 설정(분단위) -->
+   <session-config>
+   	<session-timeout>60</session-timeout>
+   </session-config>
+   
+   <!-- 나만의 태그 라이브러리를 사용하기 위한 설정  -->
+   <jsp-config>
+   	<taglib>
+   		<taglib-uri>
+   			/WEB-INF/tlds/mytag.tld
+   		</taglib-uri>
+   		<taglib-location>
+   			/WEB-INF/tlds/mytag.tld
+   		</taglib-location>
+   	</taglib>   
+   </jsp-config>
+   
+  <!-- 자료실을 위한 서블릿 등록 -->
+  
+  
+  <!-- 사용자 요청을 처리할 서블릿 등록:메인 페이지로 이동 요청용 -->
+  <servlet>
+  	<!-- 서블릿 명:임의로 지정 -->
+  	<servlet-name>DataRoomMain</servlet-name>
+  	<!-- 서블릿 클래스의 패키지를 포함한 경로 -->
+  	<servlet-class>controller.dataroom.IndexController</servlet-class>  	
+  </servlet>
+  <!-- URL패턴(요청URL)을 서블릿에 매핑 -->
+  <servlet-mapping>
+  	<!-- servlet태그의  servlet-name태그와 일치시키자-->
+  	<servlet-name>DataRoomMain</servlet-name>
+  	<!-- 사용자 요청 URL패턴:반드시 / 로 시작하는 패턴:디렉토리구조와 무관 -->
+  	<url-pattern>/DataRoom/Index.kosmo</url-pattern>
+  </servlet-mapping>
+  
+  <!-- 목록 요청 처리용 -->   
+  <servlet>  	
+  	<servlet-name>DataRoomList</servlet-name>  	
+  	<servlet-class>controller.dataroom.ListController</servlet-class>  	
+  </servlet>  
+  <servlet-mapping>  	
+  	<servlet-name>DataRoomList</servlet-name>
+  	<!-- 사용자 요청 URL패턴:반드시 / 로 시작하는 패턴:디렉토리구조와 무관 -->
+  	<url-pattern>/DataRoom/List.kosmo</url-pattern>
+  </servlet-mapping>
+  
+  <!-- 하나의 컨트롤러로 입력 폼으로 이동 요청 및 입력처리 요청을 처리 -->
+  <servlet>
+  	<servlet-name>DataRoomWrite</servlet-name>
+  	<servlet-class>controller.dataroom.WriteController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>DataRoomWrite</servlet-name>
+  	<url-pattern>/DataRoom/Write.kosmo</url-pattern>
+  </servlet-mapping>
+  
+  
+  <!-- 시작 문서 설정 -->
+  <welcome-file-list>
+  	<welcome-file>index.jsp</welcome-file>
+  	<welcome-file>HelloWorld.jsp</welcome-file>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>    
+    <welcome-file>default.html</welcome-file>
+    <welcome-file>default.htm</welcome-file>
+    <welcome-file>default.jsp</welcome-file>
+  </welcome-file-list>
+</web-app>
