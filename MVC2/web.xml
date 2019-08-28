@@ -131,8 +131,44 @@
   	<servlet-name>DataRoomWrite</servlet-name>
   	<url-pattern>/DataRoom/Write.kosmo</url-pattern>
   </servlet-mapping>
+  <!-- 상세보기용 -->
+  <servlet>
+  	<servlet-name>DataRoomView</servlet-name>
+  	<servlet-class>controller.dataroom.ViewController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>DataRoomView</servlet-name>
+  	<url-pattern>/DataRoom/View.kosmo</url-pattern>
+  </servlet-mapping>
+  <!-- 패스워드 체크용 -->
+  <servlet>
+  	<servlet-name>DataRoomPassword</servlet-name>
+  	<servlet-class>controller.dataroom.PasswordController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>DataRoomPassword</servlet-name>
+  	<url-pattern>/DataRoom/Password.kosmo</url-pattern>
+  </servlet-mapping>
   
+  <!-- 수정처리 -->
+  <servlet>
+  	<servlet-name>DataRoomEdit</servlet-name>
+  	<servlet-class>controller.dataroom.EditController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>DataRoomEdit</servlet-name>
+  	<url-pattern>/DataRoom/Edit.kosmo</url-pattern>
+  </servlet-mapping>
   
+  <!-- 다운로드 요청 처리용 -->
+  <servlet>
+  	<servlet-name>DataRoomDownload</servlet-name>
+  	<servlet-class>controller.dataroom.DownloadController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>DataRoomDownload</servlet-name>
+  	<url-pattern>/DataRoom/Download.kosmo</url-pattern>
+  </servlet-mapping>
   <!-- 시작 문서 설정 -->
   <welcome-file-list>
   	<welcome-file>index.jsp</welcome-file>
