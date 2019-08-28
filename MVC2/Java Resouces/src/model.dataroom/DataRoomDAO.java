@@ -94,5 +94,83 @@ public class DataRoomDAO {
 		
 		return affected;
 	}///////////insert
+	//상세보기용
+	public DataRoomDTO selectOne(String no) {
+		DataRoomDTO dto= null;
+		
+		String sql="SELECT * FROM dataroom WHERE no=?";
+		
+		try {
+			psmt = conn.prepareStatement(sql);
+			psmt.setString(1, no);
+			rs = psmt.executeQuery();
+			if(rs.next()) {
+				dto = new DataRoomDTO();
+				dto.setAttachedFile(rs.getString(7));
+				dto.setContent(rs.getString(5));
+				dto.setDownCount(rs.getString(8));
+				dto.setName(rs.getString(2));
+				dto.setNo(rs.getString(1));
+				dto.setPassword(rs.getString(4));
+				dto.setPostDate(rs.getDate(6));
+				dto.setTitle(rs.getString(3));		
+			}
+		} 
+		catch (SQLException e) {e.printStackTrace();}		
+		return dto;
+	}//////////////////selectOne
+	public boolean isCorrect(String no, String password) {
+		String sql="SELECT password FROM dataroom WHERE no=?";
+		try {
+			psmt = conn.prepareStatement(sql);
+			psmt.setString(1, no);
+			rs = psmt.executeQuery();
+			if(rs.next()) {
+				String original = rs.getString(1);
+				if(!original.equals(password))
+					return false;
+			}
+		} 
+		catch (SQLException e) {e.printStackTrace();return false;}
+		return true;
+	}
+	//수정처리
+	public int update(DataRoomDTO dto) {
+		int affected=0;
+		
+		String sql="UPDATE dataroom SET name=?,title=?,attachedFile=?,content=? WHERE no=?";
+		try {
+			psmt = conn.prepareStatement(sql);
+			psmt.setString(1, dto.getName());
+			psmt.setString(2, dto.getTitle());
+			psmt.setString(5, dto.getNo());
+			psmt.setString(4, dto.getContent());
+			psmt.setString(3, dto.getAttachedFile());
+			affected= psmt.executeUpdate();
+		}
+		catch(Exception e) {e.printStackTrace();}		
+		return affected;
+	}//////////////////////////
+	public int delete(String no) {
+		int affected=0;		
+		String sql="DELETE dataroom WHERE no=?";
+		try {
+			psmt = conn.prepareStatement(sql);			
+			psmt.setString(1, no);			
+			affected= psmt.executeUpdate();
+		}
+		catch(Exception e) {e.printStackTrace();}		
+		return affected;
+	}
+	//다운로드  수 증가용
+	public void updateDownloadCount(String no) {
+		String sql="UPDATE dataroom SET downcount=downcount+1 WHERE no=?";
+		try {
+			psmt = conn.prepareStatement(sql);
+			psmt.setString(1, no);
+			psmt.executeUpdate();
+		}
+		catch(Exception e) {e.printStackTrace();}		
+	}///////////////////////updateDownloadCount
 	
 }
