@@ -17,6 +17,7 @@ public class ViewController extends HttpServlet {
 	protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		//3]요청분석
 		String no = req.getParameter("no");
+		
 		//4]모델 호출 및 결과값 받기
 		DataRoomDAO dao = new DataRoomDAO(req.getServletContext());
 		DataRoomDTO record=dao.selectOne(no);
