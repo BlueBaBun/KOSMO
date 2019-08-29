@@ -25,6 +25,10 @@
     	.btn-success {
     		margin-right:5px;
     	}
+    	/* 비밀번호 입력창 줄이기:고정폭*/
+    	#pass{
+    		width:190px;
+    	}
     </style> 
     
   </head>
@@ -55,11 +59,11 @@
     				</tr>
     				<tr>
     					<th class="text-center">첨부파일</th>
-    					<td><a href="<c:url value='/DataRoom/Download.kosmo?no=${record.no}&filename=${record.attachedFile}'/>">${record.attachedFile}</a></td>
+    					<td><a class="downfile" href="<c:url value='/DataRoom/Download.kosmo?no=${record.no}&filename=${record.attachedFile}'/>">${record.attachedFile}</a></td>
     				</tr>
     				<tr>
     					<th class="text-center">다운로드</th>
-    					<td>${record.downCount}</td>
+    					<td id="downcount">${record.downCount}</td>
     				</tr>
     				<tr>
     					<th class="text-center">등록일</th>
@@ -78,9 +82,10 @@
     		<div class="col-md-offset-2 col-md-8">
     			<!-- .center-block 사용시 해당 블락의 크기를 지정하자 -->
     			<ul id="pillMenu" class="nav nav-pills center-block" style="width:200px">
-    				<li><a class="btn btn-success" href="javascript:password('UPDATE')">수정</a></li>
-    				<li><a class="btn btn-success" href="javascript:password('')">삭제</a></li>
-    				<li><a class="btn btn-success" href="<c:url value='/DataRoom/List.kosmo'/>">목록</a></li>
+    				<li><a class="btn btn-success" href="#" data-toggle="modal" data-target="#passwordModal">수정</a></li>
+    				<!-- 삭제 취소시에는 모달창이 뜨지 않도록 data-toggle="modal" 제거 그리고 자스로 제어해서 모달창을 띄운다(삭제 확인버튼 클릭시에만) -->
+    				<li><a class="btn btn-success" href="#" data-target="#passwordModal">삭제</a></li>
+    				<li><a class="btn btn-success" href="<c:url value='/DataRoom/List.kosmo?nowPage=${param.nowPage}'/>">목록</a></li>
     			</ul>   		
     		</div>
     	</div><!-- row --> 
@@ -90,27 +95,69 @@
     
 	<!-- 실제 내용 끝 -->
     <jsp:include page="/Template/DataRoomFooter.jsp"/>
-   	<form id="frm">
-   		<input type="hidden" name="password" /> 
-   		<input type="hidden" name="mode" />  		 	
-   	</form>   	
-   	<script>
-   		
-   		function password(flag){
-   			if(flag != 'UPDATE'){
-   				if(confirm('정말로 삭제 하시겠습니까?'))
-   					window.open('/JSPProj/DataRoom13/Password.jsp?mode='+flag,'win',"width=250,height=100,left=100,top=100");
-   			}
-   			else{
-   				window.open('/JSPProj/DataRoom13/Password.jsp?mode='+flag,'win',"width=250,height=100,left=100,top=100");
-   			}
-   		}
-   		function isCorrect(){
-   			location.href="/JSPProj/DataRoom/Password.kosmo?no=${record.no}&password="+document.getElementById('frm').password.value+"&mode="+document.getElementById('frm').mode.value;
-   		}
-   	
-   	</script>
-   
-    
+   	<!--  수정/삭제시 사용할 모달창 시작 -->
+   	<div class="modal fade" id="passwordModal">
+   		<div class="modal-dialog modal-sm">
+   			<div class="modal-content">
+   				<div class="modal-header">
+   					<button class="close" data-dismiss="modal">
+   						<span>&times;</span>
+   					</button>
+   					<h4 class="modal-title">비밀번호 입력창</h4>
+   				</div>
+   				<div class="modal-body">
+   					<form class="form-inline" id="passwordForm" method="post" action="<c:url value='/DataRoom/Password.kosmo'/>">
+   						<!-- 현재 페이지 번호 -->
+   						<input type="hidden" name="nowPage" value="${param.nowPage }"/>
+   						<!-- 키값 -->
+   						<input type="hidden" name="no" value="${record.no}"/>
+   						<!-- 수정/삭제 판단용 -->
+   						<input type="hidden" name="mode"/>
+   						<!-- 업로드된 파일명:삭제메뉴 클릭시 테이블 데이타 삭제후 업로드된 기존 파일 삭제하기 위함 -->
+   						<input type="hidden" name="originalFilename" value="${record.attachedFile}"/>
+   						<!-- 수정폼으로 이동 혹은 수정처리 판단용 파라미터 -->
+   						<input type="hidden" name="MOVE_FORM"/>
+   						
+   						<div class="form-group">
+   							<label><span class="glyphicon glyphicon-lock"></span></label>
+   							<input type="password" class="form-control" id="pass" name="password" placeholder="비밀번호를 입력하세요"/>
+   						</div>
+   						<div class="form-group">
+   							<input type="submit" class="btn btn-info" value="확인"/>
+   						</div>
+   					</form>   				
+   				</div>
+   			</div>   		
+   		</div>   	
+   	</div>
+    <!--  수정/삭제시 사용할 모달창 끝 -->
+    <script>
+    	$(function(){
+    		
+    		$('#pillMenu a').click(function(){
+    			console.log($(this).html());
+    			//$(this).tab('show') 클래스명이 nav-tabs일때
+    			if($(this).html()=='수정'){//수정버튼 클릭
+    				$('input[name=mode]').val('UPDATE');
+    				$('.modal-title').html('수정용 비밀번호 입력창');
+    			}
+    			else if($(this).html()=='삭제'){//삭제버튼 클릭
+    				if(confirm('정말로 삭제 하시겠습니가?')){
+    					$('input[name=mode]').val('DELETE');
+    					$('.modal-title').html('삭제용 비밀번호 입력창');
+    					//확인 버튼 클릭시 모달창 띄우기
+    					$('#passwordModal').modal('show');
+    				}
+    				
+    			}   			
+    		});
+    		
+    		//다운로드수 증가시키기
+			$('.downfile').click(function(){    			
+    			var downcount=$('#downcount').html();
+    			$('#downcount').html(parseInt(downcount)+1);
+    		});    		
+    	});    
+    </script>
   </body>
 </html>
