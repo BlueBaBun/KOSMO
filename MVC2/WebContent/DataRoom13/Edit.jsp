@@ -37,6 +37,8 @@
     		<div class="col-md-12">
     			<form class="form-horizontal" method="post" action="<c:url value='/DataRoom/Edit.kosmo'/>" enctype="multipart/form-data">
     				<input type="hidden" name="no" value="${record.no}"/>
+    				<input type="hidden" name="nowPage" value="${param.nowPage}"/>
+    				<input type="hidden" name="originalFilename" value="${record.attachedFile}"/>
     				<div class="form-group">
     					<label class="col-md-2 control-label">작성자</label>
     					<div class="col-md-3">
@@ -114,6 +116,7 @@
 					$('#title').focus();
 					return false;
 				}
+				/*
 				if($('#attachedFile').val() == ""){
 					$('#alertMessage').html("파일을 첨부하세요");
 					$('#small-modal').modal('show');
@@ -127,7 +130,7 @@
 						return false;
 					}
 					
-				}
+				}*/
 				if($('#password').val() == ""){
 					$('#alertMessage').html("비밀번호를 입력하세요");
 					$('#small-modal').modal('show');
