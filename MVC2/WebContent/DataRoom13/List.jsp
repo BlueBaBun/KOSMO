@@ -60,13 +60,13 @@
 	    				</tr>
     				</c:if>
     				<c:if test="${not isEmpty }">
-    					<c:forEach var="item" items="${list}">
+    					<c:forEach var="item" items="${list}" varStatus="loop">
 		    				<tr>
-		    					<td>${item.no}</td>
-		    					<td class="text-left">${item.title }</td>
+		    					<td>${totalRecordCount - (((nowPage - 1) * pageSize) + loop.index)}</td>
+		    					<td class="text-left"><a href="<c:url value='/DataRoom/View.kosmo?no=${item.no}&nowPage='/><c:out value='${param.nowPage}' default='1'/>">${item.title }</a></td>
 		    					<td>${item.name }</td>
-		    					<td>${item.attachedFile }</td>  
-		    					<td>${item.downCount}</td> 
+		    					<td><a class="downfile" title="${loop.count}" href="<c:url value='/DataRoom/Download.kosmo?filename=${item.attachedFile }&no=${item.no}'/>">${item.attachedFile }</a></td>  
+		    					<td id="downcount${loop.count}">${item.downCount}</td> 
 		    					<td>${item.postDate}</td> 				
 		    				</tr>
 	    				</c:forEach>
@@ -78,12 +78,24 @@
     	<!-- 페이징 -->
     	<div class="row">
     		<div class="col-md-12 text-center">
-    		1 2 3 4 5 6 7 8 9 10
+    		${pagingString}
     		</div>
     	</div>
     	
     </div><!-- container -->    
 	<!-- 실제 내용 끝 -->
     <jsp:include page="/Template/DataRoomFooter.jsp"/>
+    <script>    	
+    	$(function(){
+    		$('.downfile').click(function(){
+    			
+    			var numbering = $(this).attr('title');
+    			//console.log(numbering);
+    			var downcount=$('#downcount'+numbering).html();
+    			$('#downcount'+numbering).html(parseInt(downcount)+1);
+    		});
+    		
+    	});    
+    </script>
   </body>
 </html>
