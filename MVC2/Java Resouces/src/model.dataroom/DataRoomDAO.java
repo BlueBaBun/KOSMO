@@ -14,6 +14,8 @@ import javax.naming.NamingException;
 import javax.servlet.ServletContext;
 import javax.sql.DataSource;
 
+import model.PBKDF2;
+
 public class DataRoomDAO {
 	//[멤버변수]
 	private Connection conn;
@@ -53,10 +55,15 @@ public class DataRoomDAO {
 	public List<DataRoomDTO> selectList(Map map){
 		List<DataRoomDTO> list = new Vector<DataRoomDTO>();
 		//페이징 적용 전 쿼리
-		String sql="SELECT * FROM dataroom ORDER BY no DESC";
+		//String sql="SELECT * FROM dataroom ORDER BY no DESC";
+		//페이징 적용 쿼리(구간 쿼리)
+		String sql="SELECT * FROM (SELECT T.*,ROWNUM R FROM (SELECT * FROM dataroom ORDER BY no DESC) T) WHERE R BETWEEN ? AND ?";
 		
 		try {
 			psmt = conn.prepareStatement(sql);
+			//시작 및 끝 행번호 설정]
+			psmt.setString(1, map.get("start").toString());
+			psmt.setString(2, map.get("end").toString());
 			rs = psmt.executeQuery();
 			
 			while(rs.next()) {
@@ -76,6 +83,19 @@ public class DataRoomDAO {
 		
 		return list;
 	}//////////////selectList
+	//전체 레코드 수 얻기용]
+	public int getTotalRecordCount() {
+		int totalCount=0;
+		String sql="SELECT COUNT(*) FROM dataroom";
+		try {
+			psmt = conn.prepareStatement(sql);
+			rs = psmt.executeQuery();
+			rs.next();
+			totalCount = rs.getInt(1);
+		}
+		catch(Exception e) {e.printStackTrace();}
+		return totalCount;
+	}	
 	//입력용]
 	public int insert(DataRoomDTO dto) {
 		int affected=0;
@@ -119,19 +139,19 @@ public class DataRoomDAO {
 		catch (SQLException e) {e.printStackTrace();}		
 		return dto;
 	}//////////////////selectOne
-	public boolean isCorrect(String no, String password) {
+	public boolean isCorrectPassword(String no, String password) {
 		String sql="SELECT password FROM dataroom WHERE no=?";
 		try {
 			psmt = conn.prepareStatement(sql);
 			psmt.setString(1, no);
 			rs = psmt.executeQuery();
 			if(rs.next()) {
-				String original = rs.getString(1);
-				if(!original.equals(password))
+				String goodHash = rs.getString(1);
+				if(!PBKDF2.validatePassword(password, goodHash))
 					return false;
 			}
 		} 
-		catch (SQLException e) {e.printStackTrace();return false;}
+		catch (Exception e) {e.printStackTrace();return false;}
 		return true;
 	}
 	//수정처리
