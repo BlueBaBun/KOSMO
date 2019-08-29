@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import model.PagingUtil;
 import model.dataroom.DataRoomDAO;
 import model.dataroom.DataRoomDTO;
 
@@ -36,16 +37,40 @@ public class ListController extends HttpServlet {
 	*/
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		System.out.println("POST방식으로 요청이 들어옴");
+		//System.out.println("POST방식으로 요청이 들어옴");
 		//가]사용자 요청을 받는다	
 		//나]요청을 분석한다.
 		//다]모델에서 필요한 로직 호출해서 결과값이 있으면 받기 
 		DataRoomDAO dao = new DataRoomDAO(req.getServletContext());
 		Map map = new HashMap();
+		//페이징을 위한 로직 시작]
+	 	//전체 레코드수		
+	 	int totalRecordCount=dao.getTotalRecordCount();
+	 	//페이지 사이즈
+	 	int pageSize = Integer.parseInt(this.getInitParameter("DATAROOM_PAGESIZE"));
+	 	//블락페이지
+	 	int blockPage = Integer.parseInt(this.getInitParameter("DATAROOM_BLOCKPAGE"));
+	 	//전체 페이지수]
+	 	int totalPage=(int)Math.ceil((double)totalRecordCount/pageSize);
+	 	int nowPage=req.getParameter("nowPage")==null ? 1 : Integer.parseInt(req.getParameter("nowPage"));
+	 	//시작 및 끝 ROWNUM구하기]
+	 	int start = (nowPage-1)*pageSize+1;
+	 	int end   = nowPage*pageSize;
+	 	//페이징을 위한 로직 끝]	
+		map.put("start", start);
+		map.put("end", end);	
+		
 		List<DataRoomDTO> list=dao.selectList(map);
 		dao.close();
 		//라]결과값이 있으면 리퀘스트 영역에 저장
 		req.setAttribute("list", list);
+		//페이징 문자열을 리퀘스트 영역에 저장
+		String pagingString=PagingUtil.pagingBootStrapStyle(totalRecordCount, pageSize, blockPage, nowPage,req.getContextPath()+"/DataRoom/List.kosmo?");
+		//페이징과 관련된 속성들]
+		req.setAttribute("pagingString",pagingString);
+		req.setAttribute("totalRecordCount",totalRecordCount);
+		req.setAttribute("nowPage",nowPage);
+		req.setAttribute("pageSize",pageSize);
 		//마]결과값을 뿌려줄 뷰(JSP페이지) 선택후 포워딩
 		//뷰선택]
 		RequestDispatcher dispatcher=req.getRequestDispatcher("/DataRoom13/List.jsp");
