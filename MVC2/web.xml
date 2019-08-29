@@ -115,6 +115,15 @@
   <servlet>  	
   	<servlet-name>DataRoomList</servlet-name>  	
   	<servlet-class>controller.dataroom.ListController</servlet-class>  	
+  	<!-- ListController의 서블릿 초기화 파라미터 -->
+  	<init-param>
+  		<param-name>DATAROOM_PAGESIZE</param-name>
+  		<param-value>2</param-value>
+  	</init-param>
+  	<init-param>
+  		<param-name>DATAROOM_BLOCKPAGE</param-name>
+  		<param-value>2</param-value>
+  	</init-param>
   </servlet>  
   <servlet-mapping>  	
   	<servlet-name>DataRoomList</servlet-name>
@@ -144,13 +153,17 @@
   <servlet>
   	<servlet-name>DataRoomPassword</servlet-name>
   	<servlet-class>controller.dataroom.PasswordController</servlet-class>
+  	<init-param>
+  		<param-name>DATAROOM_PAGESIZE</param-name>
+  		<param-value>2</param-value>
+  	</init-param>
   </servlet>
   <servlet-mapping>
   	<servlet-name>DataRoomPassword</servlet-name>
   	<url-pattern>/DataRoom/Password.kosmo</url-pattern>
   </servlet-mapping>
   
-  <!-- 수정처리 -->
+  <!-- 수정폼으로 이동 및 수정처리 요청용 -->
   <servlet>
   	<servlet-name>DataRoomEdit</servlet-name>
   	<servlet-class>controller.dataroom.EditController</servlet-class>
