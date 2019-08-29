@@ -143,12 +143,9 @@
 					$('#small-modal').modal('show');
 					$('#content').focus();
 					return false;
-				}
+				}	
 				
-				
-				
-			});
-			
+			});	
 			
 			
 		});
