@@ -93,6 +93,61 @@
    	</taglib>   
    </jsp-config>
    
+   
+  <servlet>
+  	<servlet-name>GET_SERVLET</servlet-name>
+  	<servlet-class>controller.servlet.GetController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>GET_SERVLET</servlet-name>
+  	<url-pattern>/Basic/get.kosmo</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+  	<servlet-name>POST_SERVLET</servlet-name>
+  	<servlet-class>controller.servlet.PostController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>POST_SERVLET</servlet-name>
+  	<url-pattern>/Basic/post.kosmo</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+  	<servlet-name>BOTH_SERVLET</servlet-name>
+  	<servlet-class>controller.servlet.BothController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>BOTH_SERVLET</servlet-name>
+  	<url-pattern>/Basic/both.kosmo</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+  	<servlet-name>MULTI_SERVLET</servlet-name>
+  	<servlet-class>controller.servlet.MultiController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>MULTI_SERVLET</servlet-name>
+  	<url-pattern>/Basic/multi.kosmo</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+  	<servlet-name>FIRST_SERVLET</servlet-name>
+  	<servlet-class>controller.servlet.FirstController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>FIRST_SERVLET</servlet-name>
+  	<url-pattern>/Basic/first.kosmo</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+  	<servlet-name>SECOND_SERVLET</servlet-name>
+  	<servlet-class>controller.servlet.SecondController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>SECOND_SERVLET</servlet-name>
+  	<url-pattern>/Basic/second.kosmo</url-pattern>
+  </servlet-mapping>
+   
   <!-- 자료실을 위한 서블릿 등록 -->
   
   
@@ -182,6 +237,21 @@
   	<servlet-name>DataRoomDownload</servlet-name>
   	<url-pattern>/DataRoom/Download.kosmo</url-pattern>
   </servlet-mapping>
+  
+  <!-- 설정을 통한 예외처리 -->
+  <!-- 방법1]에러코드로 -->
+  <error-page>
+  	<error-code>500</error-code>
+  	<location>/Error14/ErrorCode.jsp</location>
+  </error-page>
+  <!-- 방법2]예외 클래스로 -->
+  <error-page>
+  	<exception-type>java.lang.NullPointerException</exception-type>
+  	<location>/Error14/ErrorType.jsp</location>
+  </error-page>
+  
+  
+  
   <!-- 시작 문서 설정 -->
   <welcome-file-list>
   	<welcome-file>index.jsp</welcome-file>
